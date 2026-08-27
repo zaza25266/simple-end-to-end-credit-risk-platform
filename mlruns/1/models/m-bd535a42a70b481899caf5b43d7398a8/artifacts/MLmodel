@@ -1,0 +1,27 @@
+artifact_path: /Users/zubairali/Desktop/end-to-end-credit-risk-platform/mlruns/1/models/m-bd535a42a70b481899caf5b43d7398a8/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.13
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types:
+    - catboost.core.CatBoostClassifier
+    - xgboost.sklearn.XGBClassifier
+    - lightgbm.basic.Booster
+    - lightgbm.sklearn.LGBMClassifier
+mlflow_version: 3.15.0
+model_id: m-bd535a42a70b481899caf5b43d7398a8
+model_size_bytes: 571330
+model_uuid: m-bd535a42a70b481899caf5b43d7398a8
+prompts: null
+run_id: a3b5a4c3727042d4b5a5e1123235fa3b
+utc_time_created: '2026-08-02 05:10:56.069154'

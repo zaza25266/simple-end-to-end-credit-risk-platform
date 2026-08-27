@@ -1,0 +1,62 @@
+models:
+
+  catboost:
+    roc_auc: 0.8662419435892218
+
+    params:
+      iterations: 690
+      learning_rate: 0.033840528471303886
+      depth: 4
+      l2_leaf_reg: 1.531587794641683
+      random_strength: 4.891319693380929
+      bagging_temperature: 4.981705771557597
+
+    fixed_params:
+      auto_class_weights: "Balanced"
+      loss_function: "Logloss"
+      eval_metric: "AUC"
+      random_seed: 42
+      verbose: false
+
+  xgboost:
+    roc_auc: 0.8659304704246369
+
+    params:
+      n_estimators: 405
+      learning_rate: 0.026779927855344533
+      max_depth: 4
+      subsample: 0.9975328585711651
+      colsample_bytree: 0.7872279670202367
+      min_child_weight: 7
+      gamma: 4.227205255766471
+      reg_alpha: 0.4683042974977249
+      reg_lambda: 0.45606402640874155
+
+    fixed_params:
+      objective: "binary:logistic"
+      eval_metric: "logloss"
+      random_state: 42
+      n_jobs: -1
+      scale_pos_weight: "compute_from_training_data"
+
+  lightgbm:
+    roc_auc: 0.8657359851599497
+
+    params:
+      n_estimators: 377
+      learning_rate: 0.022982417290086602
+      num_leaves: 21
+      max_depth: 7
+      min_child_samples: 40
+      subsample: 0.6376273342959565
+      colsample_bytree: 0.6778295850299293
+      reg_alpha: 0.00000998475745038443
+      reg_lambda: 0.015911771617773646
+
+    fixed_params:
+      objective: "binary"
+      class_weight: "balanced"
+      metric: "auc"
+      random_state: 42
+      verbosity: -1
+      n_jobs: -1

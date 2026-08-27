@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/unknown25266/end-to-end-credit-risk-platform.dvc

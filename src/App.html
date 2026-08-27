@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Risk Assessment — ABC Financial Services</title>
+    <meta name="description" content="Secure automated credit risk evaluation portal for loan underwriting decisions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Reset & Base ─────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy:        #1b2a4a;
+            --navy-dark:   #111d35;
+            --navy-mid:    #243558;
+            --gold:        #9a7b3a;
+            --gold-light:  #c4a45a;
+            --ink:         #1c1c1e;
+            --ink-soft:    #3a3a3c;
+            --muted:       #6b6b6e;
+            --rule:        #d0cdc7;
+            --bg:          #f5f3ef;
+            --surface:     #ffffff;
+            --surface-alt: #f9f8f6;
+            --red:         #8b1a1a;
+            --red-bg:      #fdf2f2;
+            --green:       #1a5c3a;
+            --green-bg:    #f0f7f4;
+            --radius:      3px;
+            --shadow-card: 0 1px 3px rgba(27,42,74,.10), 0 4px 16px rgba(27,42,74,.07);
+        }
+
+        html { font-size: 15px; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Top strip ────────────────────────────────────────────────── */
+        .top-strip {
+            background: var(--navy-dark);
+            color: rgba(255,255,255,.55);
+            font-size: .72rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            text-align: center;
+            padding: .35rem 1rem;
+        }
+
+        /* ── Institution header ───────────────────────────────────────── */
+        .site-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--rule);
+            padding: 0 2rem;
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.1rem 0;
+        }
+
+        .header-seal {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-seal svg { display: block; }
+
+        .header-wordmark h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: .01em;
+            line-height: 1.2;
+        }
+
+        .header-wordmark p {
+            font-size: .72rem;
+            color: var(--muted);
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            margin-top: .1rem;
+        }
+
+        .header-right {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .header-right .badge {
+            display: inline-block;
+            font-size: .68rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid var(--gold-light);
+            padding: .2rem .65rem;
+            border-radius: var(--radius);
+        }
+
+        /* ── Page chrome ─────────────────────────────────────────────── */
+        .page-wrapper {
+            max-width: 900px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem 4rem;
+            flex: 1;
+        }
+
+        /* ── Section title with rule ─────────────────────────────────── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: .9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--rule);
+        }
+
+        .section-label span {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        /* ── Breadcrumb ───────────────────────────────────────────────── */
+        .breadcrumb {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-bottom: 1.6rem;
+        }
+
+        .breadcrumb a {
+            color: var(--navy);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb .sep { margin: 0 .4rem; }
+
+        /* ── Page heading ────────────────────────────────────────────── */
+        .page-heading {
+            margin-bottom: 2rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .page-heading h2 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.7rem;
+            font-weight: 500;
+            color: var(--navy);
+            line-height: 1.25;
+        }
+
+        .page-heading p {
+            margin-top: .45rem;
+            font-size: .85rem;
+            color: var(--muted);
+            max-width: 520px;
+        }
+
+        /* ── Form card ───────────────────────────────────────────────── */
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--rule);
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-card-header {
+            background: var(--navy);
+            padding: .85rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-card-header span {
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+        }
+
+        .form-card-header .ref {
+            font-size: .7rem;
+            color: rgba(255,255,255,.35);
+            font-family: 'Inter', monospace;
+        }
+
+        .form-body {
+            padding: 1.75rem 1.75rem 1.5rem;
+        }
+
+        /* ── Field group label (section within form) ─────────────────── */
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-group-title {
+            font-size: .67rem;
+            font-weight: 600;
+            letter-spacing: .11em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border-bottom: 1px solid #ede9e1;
+            padding-bottom: .4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Grid layout ─────────────────────────────────────────────── */
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 1.5rem;
+        }
+
+        @media (max-width: 580px) {
+            .field-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Individual field ────────────────────────────────────────── */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+        }
+
+        .field label {
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            letter-spacing: .01em;
+        }
+
+        .field .field-note {
+            font-size: .68rem;
+            color: var(--muted);
+            margin-top: -.15rem;
+        }
+
+        .field input[type="number"] {
+            appearance: none;
+            -moz-appearance: textfield;
+            width: 100%;
+            padding: .55rem .75rem;
+            font-size: .88rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background: var(--surface);
+            border: 1px solid #c8c4bc;
+            border-radius: var(--radius);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .field input[type="number"]::-webkit-inner-spin-button,
+        .field input[type="number"]::-webkit-outer-spin-button { opacity: 1; }
+
+        .field input[type="number"]:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 2px rgba(27,42,74,.12);
+        }
+
+        .field input[type="number"]:hover:not(:focus) {
+            border-color: #9a9590;
+        }
+
+        /* ── Divider ─────────────────────────────────────────────────── */
+        .form-divider {
+            border: none;
+            border-top: 1px solid #ede9e1;
+            margin: 1.25rem 0;
+        }
+
+        /* ── Submit row ──────────────────────────────────────────────── */
+        .submit-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--rule);
+            flex-wrap: wrap;
+        }
+
+        .submit-note {
+            font-size: .73rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .submit-note::before {
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6aaa80;
+            flex-shrink: 0;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: .65rem 1.75rem;
+            font-size: .83rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: .04em;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: background .15s;
+        }
+
+        .btn-submit:hover:not(:disabled) { background: var(--navy-mid); }
+        .btn-submit:disabled { opacity: .55; cursor: not-allowed; }
+
+        .btn-submit .spinner {
+            display: none;
+            width: 13px;
+            height: 13px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+        }
+
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading .btn-label { opacity: .7; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Error notice ────────────────────────────────────────────── */
+        .notice-error {
+            display: none;
+            margin-top: 1.25rem;
+            padding: .8rem 1rem;
+            background: var(--red-bg);
+            border: 1px solid #e8c4c4;
+            border-left: 3px solid var(--red);
+            font-size: .82rem;
+            color: var(--red);
+        }
+
+        .notice-error strong { font-weight: 600; }
+        .notice-error.visible { display: block; }
+
+        /* ── Info notice ────────────────────────────────────────────── */
+        @keyframes blink-alert {
+            0% { opacity: 1; background-color: #ff2a2a; }
+            50% { opacity: 0.8; background-color: #cc0000; }
+            100% { opacity: 1; background-color: #ff2a2a; }
+        }
+        .notice-info {
+            display: none;
+            margin-top: 1.25rem;
+            padding: .8rem 1rem;
+            background: #ff2a2a;
+            border: 2px solid #b30000;
+            border-radius: var(--radius);
+            font-size: .85rem;
+            color: #ffffff;
+            font-weight: 500;
+            animation: blink-alert 1.2s infinite;
+            text-align: center;
+        }
+        .notice-info strong { font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: .05em; }
+        .notice-info.visible { display: block; }
+
+        /* ── Decision panel ──────────────────────────────────────────── */
+        .decision-panel {
+            display: none;
+            margin-top: 1.5rem;
+            border: 1px solid var(--rule);
+            background: var(--surface);
+            box-shadow: var(--shadow-card);
+        }
+
+        .decision-panel.visible { display: block; }
+
+        .decision-header {
+            padding: .7rem 1.25rem;
+            background: var(--surface-alt);
+            border-bottom: 1px solid var(--rule);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .decision-header span {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .decision-timestamp {
+            font-size: .68rem;
+            color: var(--muted);
+            font-family: 'Inter', monospace;
+        }
+
+        /* ── Verdict banner ──────────────────────────────────────────── */
+        .verdict-banner {
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+        }
+
+        .verdict-banner.approved {
+            background: var(--green-bg);
+            border-bottom: 1px solid #c4ddd2;
+        }
+
+        .verdict-banner.declined {
+            background: var(--red-bg);
+            border-bottom: 1px solid #e8c4c4;
+        }
+
+        .verdict-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+
+        .approved .verdict-icon { background: #d2ede2; color: var(--green); }
+        .declined .verdict-icon { background: #f5d6d6; color: var(--red); }
+
+        .verdict-text strong {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'EB Garamond', Georgia, serif;
+        }
+
+        .approved .verdict-text strong { color: var(--green); }
+        .declined .verdict-text strong { color: var(--red); }
+
+        .verdict-text small {
+            font-size: .73rem;
+            color: var(--muted);
+        }
+
+        /* ── Metrics table ───────────────────────────────────────────── */
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .metrics-table td {
+            padding: .65rem 1.25rem;
+            font-size: .83rem;
+            border-bottom: 1px solid #f0ede8;
+        }
+
+        .metrics-table tr:last-child td { border-bottom: none; }
+
+        .metrics-table .metric-label {
+            color: var(--muted);
+            font-size: .75rem;
+            font-weight: 500;
+            letter-spacing: .03em;
+            width: 55%;
+        }
+
+        .metrics-table .metric-value {
+            color: var(--ink);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .prob-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            justify-content: flex-end;
+        }
+
+        .prob-bar-track {
+            width: 90px;
+            height: 5px;
+            background: #e8e4de;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .prob-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width .5s ease;
+        }
+
+        .bar-low  { background: #5a9e78; }
+        .bar-high { background: #b84040; }
+
+        /* ── Footer ──────────────────────────────────────────────────── */
+        .site-footer {
+            background: var(--navy-dark);
+            border-top: 1px solid #0d1626;
+            padding: 1.25rem 2rem;
+            text-align: center;
+        }
+
+        .site-footer p {
+            font-size: .7rem;
+            color: rgba(255,255,255,.3);
+            letter-spacing: .05em;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top strip -->
+    <div class="top-strip">Secure Portal &nbsp;·&nbsp; For Authorised Underwriting Use Only &nbsp;·&nbsp; All Submissions Are Logged</div>
+
+    <!-- Institution header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-seal" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="9" stroke="#1b2a4a" stroke-width="1.5"/>
+                    <path d="M11 4 L11 18 M6 8 L16 8 M6 14 L16 14" stroke="#1b2a4a" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="header-wordmark">
+                <h1>ABC Financial Services</h1>
+                <p>Credit Risk &amp; Underwriting Division</p>
+            </div>
+            <div class="header-right">
+                <span class="badge">Internal System</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page-wrapper">
+
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="#">Home</a>
+            <span class="sep">/</span>
+            <a href="#">Underwriting</a>
+            <span class="sep">/</span>
+            <span>Credit Risk Assessment</span>
+        </nav>
+
+        <div class="page-heading">
+            <h2>Automated Credit Risk Evaluation</h2>
+            <p>Complete all required fields below. The model will return a default probability and a credit decision based on the configured threshold.</p>
+        </div>
+
+        <!-- Application form card -->
+        <div class="form-card" role="region" aria-label="Credit risk application form">
+
+            <div class="form-card-header">
+                <span>Applicant Profile — Section A</span>
+                <span class="ref">FORM-CRA-2024</span>
+            </div>
+
+            <div class="form-body">
+                <form id="predictionForm" novalidate>
+
+                    <!-- Group 1: Personal & Income -->
+                    <div class="field-group">
+                        <div class="field-group-title">Personal &amp; Income Information</div>
+                        <div class="field-grid">
+
+                            <div class="field">
+                                <label for="age">Age of Applicant</label>
+                                <span class="field-note">Years (18 – 120)</span>
+                                <input type="number" id="age" value="45" min="18" max="120" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="MonthlyIncome">Monthly Gross Income</label>
+                                <span class="field-note">USD, before tax</span>
+                                <input type="number" id="MonthlyIncome" value="6000" min="0" step="100" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="NumberOfDependents">Number of Dependents</label>
+                                <span class="field-note">Excluding applicant</span>
+                                <input type="number" id="NumberOfDependents" value="2" min="0" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="DebtRatio">Debt-to-Income Ratio</label>
+                                <span class="field-note">Monthly obligations ÷ gross income</span>
+                                <input type="number" id="DebtRatio" value="0.4" min="0" step="0.01" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+
+                    <!-- Group 2: Credit Profile -->
+                    <div class="field-group">
+                        <div class="field-group-title">Credit &amp; Liability Profile</div>
+                        <div class="field-grid">
+
+                            <div class="field">
+                                <label for="RevolvingUtilizationOfUnsecuredLines">Revolving Credit Utilisation</label>
+                                <span class="field-note">Balance ÷ total credit limit (0.0 – 1.0+)</span>
+                                <input type="number" id="RevolvingUtilizationOfUnsecuredLines" value="0.3" min="0" step="0.01" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="NumberOfOpenCreditLinesAndLoans">Open Credit Lines &amp; Loans</label>
+                                <span class="field-note">Total number currently open</span>
+                                <input type="number" id="NumberOfOpenCreditLinesAndLoans" value="6" min="0" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="NumberRealEstateLoansOrLines">Real Estate Loans or Lines</label>
+                                <span class="field-note">Mortgage &amp; equity lines included</span>
+                                <input type="number" id="NumberRealEstateLoansOrLines" value="1" min="0" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+
+                    <!-- Group 3: Delinquency History -->
+                    <div class="field-group">
+                        <div class="field-group-title">Delinquency History</div>
+                        <div class="field-grid">
+
+                            <div class="field">
+                                <!-- HTML id uses underscore (valid DOM); JS maps to hyphenated API key -->
+                                <label for="NumberOfTime30_59DaysPastDueNotWorse">30 – 59 Days Past Due</label>
+                                <span class="field-note">Times occurred, not worse</span>
+                                <input type="number" id="NumberOfTime30_59DaysPastDueNotWorse" value="0" min="0" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="NumberOfTime60_89DaysPastDueNotWorse">60 – 89 Days Past Due</label>
+                                <span class="field-note">Times occurred, not worse</span>
+                                <input type="number" id="NumberOfTime60_89DaysPastDueNotWorse" value="0" min="0" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="NumberOfTimes90DaysLate">90 + Days Past Due</label>
+                                <span class="field-note">Times 90 days or more late</span>
+                                <input type="number" id="NumberOfTimes90DaysLate" value="0" min="0" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="submit-row">
+                        <span class="submit-note">Secured connection &mdash; output stored in audit log</span>
+                        <button type="submit" id="submitBtn" class="btn-submit">
+                            <span class="spinner" aria-hidden="true"></span>
+                            <span class="btn-label">Submit for Assessment</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Error notice -->
+        <div class="notice-error" id="errorCard" role="alert">
+            <strong>Error &mdash;</strong> <span id="errorText"></span>
+        </div>
+
+        <!-- Info notice -->
+        <div class="notice-info" id="infoCard" role="status">
+            <strong>Note &mdash;</strong> First-time requests may take 30-60 minutes to process as the free Render tier wakes up the model. Subsequent assessments will work instantly.
+        </div>
+
+        <!-- Decision panel -->
+        <div class="decision-panel" id="resultCard" role="region" aria-label="Assessment result" aria-live="polite">
+
+            <div class="decision-header">
+                <span>Credit Assessment Result</span>
+                <span class="decision-timestamp" id="resultTimestamp"></span>
+            </div>
+
+            <!-- Verdict banner (class toggled by JS) -->
+            <div class="verdict-banner" id="verdictBanner">
+                <div class="verdict-icon" id="verdictIcon" aria-hidden="true"></div>
+                <div class="verdict-text">
+                    <strong id="statusText"></strong>
+                    <small id="verdictSub"></small>
+                </div>
+            </div>
+
+            <!-- Metrics -->
+            <table class="metrics-table" aria-label="Risk metrics">
+                <tbody>
+                    <tr>
+                        <td class="metric-label">Default Probability</td>
+                        <td class="metric-value">
+                            <div class="prob-bar-wrap">
+                                <div class="prob-bar-track">
+                                    <div class="prob-bar-fill" id="probBar"></div>
+                                </div>
+                                <span id="probabilityText"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Risk Score</td>
+                        <td class="metric-value" id="riskScoreText"></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Decision Threshold</td>
+                        <td class="metric-value" id="thresholdText"></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Model</td>
+                        <td class="metric-value" style="color:var(--muted); font-weight:400; font-size:.78rem;">CatBoost + LightGBM Soft Voting Ensemble</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>ABC Financial Services &mdash; Credit Risk &amp; Underwriting Division &mdash; For Internal Use Only &mdash; &copy; 2024</p>
+    </footer>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn        = document.getElementById('submitBtn');
+            const errorCard  = document.getElementById('errorCard');
+            const errorText  = document.getElementById('errorText');
+            const infoCard   = document.getElementById('infoCard');
+            const resultCard = document.getElementById('resultCard');
+
+            // Loading state
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.querySelector('.btn-label').textContent = 'Evaluating…';
+            errorCard.classList.remove('visible');
+            resultCard.classList.remove('visible');
+            infoCard.classList.add('visible');
+
+            // Build API payload.
+            // HTML input ids use underscores (valid DOM); the two past-due fields must be
+            // sent with their hyphenated aliases as the Pydantic schema requires them.
+            const payload = {
+                RevolvingUtilizationOfUnsecuredLines:
+                    parseFloat(document.getElementById('RevolvingUtilizationOfUnsecuredLines').value),
+                age:
+                    parseInt(document.getElementById('age').value),
+                'NumberOfTime30-59DaysPastDueNotWorse':
+                    parseInt(document.getElementById('NumberOfTime30_59DaysPastDueNotWorse').value),
+                DebtRatio:
+                    parseFloat(document.getElementById('DebtRatio').value),
+                MonthlyIncome:
+                    parseFloat(document.getElementById('MonthlyIncome').value),
+                NumberOfOpenCreditLinesAndLoans:
+                    parseInt(document.getElementById('NumberOfOpenCreditLinesAndLoans').value),
+                NumberOfTimes90DaysLate:
+                    parseInt(document.getElementById('NumberOfTimes90DaysLate').value),
+                NumberRealEstateLoansOrLines:
+                    parseInt(document.getElementById('NumberRealEstateLoansOrLines').value),
+                'NumberOfTime60-89DaysPastDueNotWorse':
+                    parseInt(document.getElementById('NumberOfTime60_89DaysPastDueNotWorse').value),
+                NumberOfDependents:
+                    parseInt(document.getElementById('NumberOfDependents').value),
+            };
+
+            try {
+                const response = await fetch('https://end-to-end-credit-risk-platform.onrender.com/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const body = await response.json().catch(() => ({}));
+                    throw new Error(body.detail || `Server error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const isDefault = data.prediction === 'Flagged for Default Risk';
+                const prob      = data.default_probability;
+
+                // Verdict banner
+                const banner = document.getElementById('verdictBanner');
+                const icon   = document.getElementById('verdictIcon');
+                const sub    = document.getElementById('verdictSub');
+                banner.className = 'verdict-banner ' + (isDefault ? 'declined' : 'approved');
+                icon.textContent  = isDefault ? '✕' : '✓';
+                document.getElementById('statusText').textContent =
+                    isDefault ? 'Application Declined — Default Risk Identified'
+                              : 'Application Approved — Satisfactory Risk Profile';
+                sub.textContent = isDefault
+                    ? 'Refer to credit officer for manual review.'
+                    : 'Proceed to standard underwriting workflow.';
+
+                // Probability bar
+                const bar = document.getElementById('probBar');
+                bar.style.width     = Math.min(prob * 100, 100) + '%';
+                bar.className       = 'prob-bar-fill ' + (isDefault ? 'bar-high' : 'bar-low');
+
+                // Metrics
+                document.getElementById('probabilityText').textContent =
+                    (prob * 100).toFixed(2) + '%';
+                document.getElementById('riskScoreText').textContent =
+                    data.risk_score_percentage.toFixed(2) + ' / 100';
+                document.getElementById('thresholdText').textContent =
+                    (data.decision_threshold * 100).toFixed(0) + '%';
+
+                // Timestamp
+                document.getElementById('resultTimestamp').textContent =
+                    new Date().toLocaleString('en-US', {
+                        year:'numeric', month:'short', day:'2-digit',
+                        hour:'2-digit', minute:'2-digit', second:'2-digit'
+                    });
+
+                resultCard.classList.add('visible');
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (err) {
+                errorText.textContent = err.message || 'Unable to reach the scoring service.';
+                errorCard.classList.add('visible');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                btn.querySelector('.btn-label').textContent = 'Submit for Assessment';
+                infoCard.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

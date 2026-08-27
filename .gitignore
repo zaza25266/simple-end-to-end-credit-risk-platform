@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Data & Models (DVC will track data, local caches ignored)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+mlflow.db
+mlflow/
+mlflow/mlflow.db
+
+# Environment variables & IDEs
+.env
+.venv
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Ignore local data
+data/raw/
+data/processed/
+*.csv
+*.zip
+
+# Ignore heavy ML artifacts
+/data
+
+# Local SQLite telemetry fallback (dev only — never commit)
+telemetry.db
+

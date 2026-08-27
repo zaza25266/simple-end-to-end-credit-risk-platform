@@ -1,0 +1,189 @@
+project:
+  name: "end-to-end-credit-risk-platform"
+  target_column: "SeriousDlqin2yrs"
+  id_column: "Id"
+
+data:
+  raw_path: "data/raw/cs-training.csv"
+  processed_path: "data/processed/final_modeling_dataset_v1.csv"
+  test_size: 0.20
+  random_state: 42
+
+preprocessing:
+  knn_imputer_n_neighbors: 5
+  outlier_removal: false
+  resampling: null
+
+prediction:
+  threshold: 0.54
+
+models:
+
+  champion: "catboost_lightgbm_soft_voting"
+
+  catboost:
+    roc_auc: 0.8662419435892218
+
+    params:
+      iterations: 690
+      learning_rate: 0.033840528471303886
+      depth: 4
+      l2_leaf_reg: 1.531587794641683
+      random_strength: 4.891319693380929
+      bagging_temperature: 4.981705771557597
+
+    fixed_params:
+      auto_class_weights: "Balanced"
+      loss_function: "Logloss"
+      eval_metric: "AUC"
+      random_seed: 42
+      verbose: false
+
+  xgboost:
+    roc_auc: 0.8659304704246369
+
+    params:
+      n_estimators: 405
+      learning_rate: 0.026779927855344533
+      max_depth: 4
+      subsample: 0.9975328585711651
+      colsample_bytree: 0.7872279670202367
+      min_child_weight: 7
+      gamma: 4.227205255766471
+      reg_alpha: 0.4683042974977249
+      reg_lambda: 0.45606402640874155
+
+    fixed_params:
+      objective: "binary:logistic"
+      eval_metric: "logloss"
+      random_state: 42
+      n_jobs: -1
+      scale_pos_weight: "compute_from_training_data"
+
+  lightgbm:
+    roc_auc: 0.8657359851599497
+
+    params:
+      n_estimators: 377
+      learning_rate: 0.022982417290086602
+      num_leaves: 21
+      max_depth: 7
+      min_child_samples: 40
+      subsample: 0.6376273342959565
+      colsample_bytree: 0.6778295850299293
+      reg_alpha: 0.00000998475745038443
+      reg_lambda: 0.015911771617773646
+
+    fixed_params:
+      objective: "binary"
+      class_weight: "balanced"
+      metric: "auc"
+      random_state: 42
+      verbosity: -1
+      n_jobs: -1
+
+ensemble:
+
+  selected: true
+
+  final_model:
+    name: "CatBoost + LightGBM Soft Voting"
+
+  voting: "soft"
+
+  models:
+    - catboost
+    - lightgbm
+
+  weights:
+    catboost: 0.50
+    lightgbm: 0.50
+
+  metrics:
+    accuracy: 0.823367
+    roc_auc: 0.870994
+    pr_auc: 0.403109
+    precision: 0.239068
+    recall: 0.752618
+    f1: 0.362871
+
+  deployment:
+    selected: true
+    reason: >
+      Best overall production model after Optuna tuning,
+      threshold optimization and ensemble experiments.
+      Highest ROC-AUC, PR-AUC, Precision and F1 while
+      maintaining Recall above the business target of 75%.
+
+  experiments:
+
+    equal_voting:
+      threshold: 0.54
+      accuracy: 0.822900
+      roc_auc: 0.870804
+      pr_auc: 0.403104
+      precision: 0.238208
+      recall: 0.750623
+      f1: 0.361648
+
+    weighted_50_25_25:
+      threshold: 0.54
+      weights:
+        catboost: 0.50
+        xgboost: 0.25
+        lightgbm: 0.25
+      accuracy: 0.822967
+      roc_auc: 0.870943
+      pr_auc: 0.403277
+      precision: 0.238615
+      recall: 0.752618
+      f1: 0.362348
+
+    weighted_40_30_30:
+      threshold: 0.54
+      weights:
+        catboost: 0.40
+        xgboost: 0.30
+        lightgbm: 0.30
+      accuracy: 0.822867
+      roc_auc: 0.870873
+      pr_auc: 0.403351
+      precision: 0.238419
+      recall: 0.752120
+      f1: 0.362065
+
+    catboost_xgboost:
+      threshold: 0.54
+      weights:
+        catboost: 0.50
+        xgboost: 0.50
+      accuracy: 0.822033
+      roc_auc: 0.870768
+      pr_auc: 0.403292
+      precision: 0.237480
+      recall: 0.752120
+      f1: 0.360981
+
+    catboost_lightgbm:
+      threshold: 0.54
+      weights:
+        catboost: 0.50
+        lightgbm: 0.50
+      accuracy: 0.823367
+      roc_auc: 0.870994
+      pr_auc: 0.403109
+      precision: 0.239068
+      recall: 0.752618
+      f1: 0.362871
+
+    xgboost_lightgbm:
+      threshold: 0.53
+      weights:
+        xgboost: 0.50
+        lightgbm: 0.50
+      accuracy: 0.816500
+      roc_auc: 0.870305
+      pr_auc: 0.401782
+      precision: 0.232252
+      recall: 0.757107
+      f1: 0.355462
