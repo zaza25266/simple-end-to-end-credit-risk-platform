@@ -15,12 +15,11 @@ The project covers data validation, feature engineering, model training, experim
 * **Explainability:** SHAP
 * **Model serving:** FastAPI
 * **Input validation:** Pydantic
-* **Telemetry:** SQLAlchemy with SQLite fallback / PostgreSQL support
+* **Telemetry:** SQLAlchemy with SQLite
 * **Rate limiting:** SlowAPI
 * **Containerization:** Docker + Docker Compose
 * **Testing:** Pytest
 * **CI:** GitHub Actions
-* **Monitoring components:** Prometheus + Evidently
 * **Deployment:** Render
 
 ### Architecture
@@ -47,7 +46,7 @@ FastAPI
    ↓
 Prediction
    ↓
-Telemetry Database
+Database
 ```
 
 ### Configuration
