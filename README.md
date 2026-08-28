@@ -2,7 +2,7 @@
 
 An end-to-end machine learning project for predicting **serious delinquency within two years** using the Give Me Some Credit dataset.
 
-The project covers data validation, feature engineering, model training, experiment tracking, model serving and prediction telemetry.
+The project covers data validation, feature engineering, model training, experiment tracking, model serving and prediction telemetry (only while running local test).
 
 ### Key Features
 
