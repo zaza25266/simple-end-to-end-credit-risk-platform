@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 _DEFAULT_SQLITE = (
     "sqlite:///"
-    + str(Path(__file__).resolve().parents[3] / "telemetry.db")
+    + str(Path(__file__).resolve().parents[2] / "telemetry.db")
 )
 DATABASE_URL = os.getenv("DATABASE_URL", _DEFAULT_SQLITE)
 
@@ -36,6 +36,16 @@ class PredictionTelemetry(Base):
     monthly_income = Column(Float)
     default_probability = Column(Float)
     prediction_decision = Column(String(50))
+
+
+class AppLog(Base):
+    __tablename__ = "app_logs"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    level = Column(String(50))
+    message = Column(String(1000))
+    module = Column(String(100))
 
 
 def init_db():

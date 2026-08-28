@@ -7,6 +7,11 @@ from slowapi.errors import RateLimitExceeded
 from src.api.schemas import LoanApplicationRequest, PredictionResponse
 from src.api.dependencies import get_production_artifacts
 from src.api.database import init_db, SessionLocal, PredictionTelemetry
+import logging
+from src.api.sqlite_logger import SQLiteHandler
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger().addHandler(SQLiteHandler())
 
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(
